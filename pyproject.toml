@@ -1,5 +1,8 @@
 [project]
 name = "gitops-mt"
+authors = [
+  {name = "Piotr Przetacznik", email = "piotr.przetacznik+gitops@gmail.com"}
+]
 license = {file = "LICENSE"}
 readme = "README.md"
 dynamic = ["version", "dependencies"]
