@@ -1,0 +1,4 @@
+- my_config:
+  - var1: {template.var1}
+  - var2: {template.var2}
+  - var2: {template.var3}

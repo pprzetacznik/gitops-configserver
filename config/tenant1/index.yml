@@ -1,0 +1,23 @@
+tenant_name: tenant1
+variables:
+  - defaults.yml
+  - {environment}.yml
+environments:
+  - dev.yml
+  - prod.yml
+repositories:
+  - repo_name: test_repo1
+url: ../test_repo1
+config:
+  - template: template1.tpl
+    variables:
+      - tenant_variable: aaa
+        tpl_variable: template.var1
+      - tenant_variable: bbb
+        tpl_variable: template.var2
+      - tenant_variable: ccc
+        tpl_variable: template.var2
+    repo_name: test_repo1
+    dest_path: config.yml
+    environment: prod
+
