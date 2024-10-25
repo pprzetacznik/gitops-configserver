@@ -1,0 +1,6 @@
+recursive-include config
+include MANIFEST.in
+include README.md
+include LICENSE.txt
+include requirements.txt
+include pytest.ini

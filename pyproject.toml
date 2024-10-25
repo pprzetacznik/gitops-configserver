@@ -1,0 +1,20 @@
+[project]
+name = "gitops-mt"
+license = {file = "LICENSE"}
+readme = "README.md"
+dynamic = ["version", "dependencies"]
+classifiers = [
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages]
+find = {}
+
+[tool.setuptools.dynamic]
+version = {file = "VERSION"}
+dependencies = { file = ["requirements.txt"] }
