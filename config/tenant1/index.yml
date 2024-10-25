@@ -1,15 +1,15 @@
 tenant_name: tenant1
 variables:
-  - defaults.yml
-  - {environment}.yml
+  - "defaults.yml"
+  - "{environment}.yml"
 environments:
   - dev.yml
   - prod.yml
 repositories:
   - repo_name: test_repo1
 url: ../test_repo1
-config:
-  - template: template1.tpl
+configs:
+  - template_file: template1.tpl
     variables:
       - tenant_variable: aaa
         tpl_variable: template.var1

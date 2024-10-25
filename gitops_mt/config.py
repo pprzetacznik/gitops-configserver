@@ -35,8 +35,10 @@ def setup_logger():
 
 
 class Config:
+    LOGS_VERBOSE = True
+
     LOGGER_CONFIG_FILE = getenv(
         "GITOPS_MT__LOGGER_CONFIG_FILE", path.join("resources", "logger.yaml")
     )
     CONFIG_DIR = getenv("GITOPS_MT__CONFIG_DIR")
-    LOGS_VERBOSE = True
+    TARGET_DIR = getenv("GITOPS_MT__TARGET_DIR", "target")
