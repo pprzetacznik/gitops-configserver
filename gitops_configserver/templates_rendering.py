@@ -52,12 +52,18 @@ class TemplatesRendering:
         tenants_list = self.tenants_config_loader.index().get("tenants", [])
         print(tenants_list)
         for tenant_name in tenants_list:
-            variables = self.tenants_config_loader.variables(tenant_name)
-            print(variables)
+            tenant_variables = self.tenants_config_loader.variables(tenant_name)
+            print(f"tenant_variables: {tenant_variables}")
             tenant_config = self.tenants_config_loader.tenant(tenant_name)
             print(tenant_config)
             for template_config in tenant_config.get("configs"):
                 print(template_config)
+                template_variables_mapping = template_config.get(
+                    "variables", []
+                )
+                print(
+                    f"template_variables_mapping: {template_variables_mapping}"
+                )
                 template_content = read_file(
                     join(
                         self.config.CONFIG_DIR,
@@ -66,14 +72,28 @@ class TemplatesRendering:
                         template_config.get("template_file"),
                     )
                 )
-                print(template_content)
-                print(
-                    self.render_template(
-                        template_content,
-                        {**variables, **{"template_var3": "123"}},
-                    )
+                print(f"template_content: {template_content}")
+                tpl_variables = VariablesResolver.resolve_for_template(
+                    template_config.get("variables", []), tenant_variables
                 )
+                print(f"tpl_variables: {tpl_variables}")
+                print(self.render_template(template_content, tpl_variables))
 
     def render_template(self, template: str, variables: dict) -> dict:
         new_template = self.jinja_env.from_string(template)
         return new_template.render(**variables)
+
+
+class VariablesResolver:
+    @staticmethod
+    def resolve_for_template(
+        template_variables_mapping: list, tenant_variables: dict
+    ) -> dict:
+        resolved_dict = {}
+        for template_variable_item in template_variables_mapping:
+            key = template_variable_item.get("tpl_variable")
+            value = tenant_variables.get(
+                template_variable_item.get("tenant_variable")
+            )
+            resolved_dict[key] = value
+        return resolved_dict

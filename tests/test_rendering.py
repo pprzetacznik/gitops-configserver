@@ -1,12 +1,12 @@
-from gitops_mt.config import Config
-from gitops_mt.templates_rendering import TemplatesRendering
+from gitops_configserver.config import Config
+from gitops_configserver.templates_rendering import TemplatesRendering
 from pytest import fixture
 
 
 @fixture
 def config():
     config = Config()
-    config.CONFIG_DIR = "config"
+    config.CONFIG_DIR = "resources/test_config"
     config.TARGET_DIR = "target"
     return config
 

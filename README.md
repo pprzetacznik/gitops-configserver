@@ -1,6 +1,8 @@
 # GitOps Configserver
 
-[![gitops-configserver Test](https://github.com/pprzetacznik/gitops-multitenant-templates/actions/workflows/test.yml/badge.svg)](https://github.com/pprzetacznik/gitops-multitenant-templates/actions/workflows/test.yml)
+[![gitops-configserver Test](https://github.com/pprzetacznik/gitops-configserver/actions/workflows/test.yml/badge.svg)](https://github.com/pprzetacznik/gitops-configserver/actions/workflows/test.yml)
+
+Inspired by puppet, kustomized and GitOps practices.
 
 ## Planned features
 
@@ -19,4 +21,3 @@ options:
   --config_dir CONFIG_DIR
                         Config directory
 ```
-
