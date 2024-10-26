@@ -1,6 +1,6 @@
 from argparse import Namespace, ArgumentParser
 from abc import ABC, abstractmethod
-from gitops_mt.config import setup_logger, Config
+from gitops_configserver.config import setup_logger, Config
 
 
 class AbstractArgumentsHandler(ABC):

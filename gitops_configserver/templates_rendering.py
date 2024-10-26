@@ -1,8 +1,8 @@
 from os.path import join
 import jinja2
 import yaml
-from gitops_mt.config import Config
-from gitops_mt.utils import create_dir, read_file
+from gitops_configserver.config import Config
+from gitops_configserver.utils import create_dir, read_file
 
 
 class TenantsConfigLoader:

@@ -2,4 +2,4 @@
 
 set -xe
 
-python -m gitops_mt.cli config_gen --config_dir=config
+python -m gitops_configserver.cli config_gen --config_dir=config

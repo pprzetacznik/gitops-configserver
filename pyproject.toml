@@ -1,5 +1,5 @@
 [project]
-name = "gitops-mt"
+name = "gitops-configserver"
 authors = [
   {name = "Piotr Przetacznik", email = "piotr.przetacznik+gitops@gmail.com"}
 ]
