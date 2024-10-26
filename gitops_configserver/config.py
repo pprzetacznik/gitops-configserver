@@ -38,7 +38,11 @@ class Config:
     LOGS_VERBOSE = True
 
     LOGGER_CONFIG_FILE = getenv(
-        "GITOPS_MT__LOGGER_CONFIG_FILE", path.join("resources", "logger.yaml")
+        "GITOPS_CONFIGSERVER__LOGGER_CONFIG_FILE",
+        path.join("resources", "logger.yaml"),
     )
-    CONFIG_DIR = getenv("GITOPS_MT__CONFIG_DIR")
-    TARGET_DIR = getenv("GITOPS_MT__TARGET_DIR", "target")
+    CONFIG_DIR = getenv("GITOPS_CONFIGSERVER__CONFIG_DIR")
+    TARGET_DIR = getenv("GITOPS_CONFIGSERVER__TARGET_DIR", "target")
+
+    HOST = getenv("GITOPS_CONFIGSERVER__HOST", "0.0.0.0")
+    PORT = getenv("GITOPS_CONFIGSERVER__PORT", "8002")

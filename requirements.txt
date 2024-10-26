@@ -1,3 +1,5 @@
 pytest
 Jinja2
 pyyaml
+Flask
+flask-restful

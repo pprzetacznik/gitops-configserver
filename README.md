@@ -21,3 +21,10 @@ options:
   --config_dir CONFIG_DIR
                         Config directory
 ```
+
+```
+$ python -m gitops_server.cli server --config_dir=config
+...
+$ curl http://localhost:8002/configs
+{"tenants":["tenant1"]}
+```
