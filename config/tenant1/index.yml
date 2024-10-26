@@ -18,6 +18,6 @@ configs:
       - tenant_variable: ccc
         tpl_variable: template_var3
     repo_name: test_repo1
-    dest_path: config.yml
+    destination_filename: config1.yml
     environment: prod
 

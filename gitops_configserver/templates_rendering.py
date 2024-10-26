@@ -1,8 +1,11 @@
 from os.path import join
+import logging
 import jinja2
 import yaml
 from gitops_configserver.config import Config
-from gitops_configserver.utils import create_dir, read_file
+from gitops_configserver.utils import create_dir, read_file, write_to_file
+
+logger = logging.getLogger(__name__)
 
 
 class TenantsConfigLoader:
@@ -33,7 +36,6 @@ class TemplatesRendering:
     def __init__(self, config: Config):
         self.config = config
         self.tenants_config_loader = TenantsConfigLoader(config)
-
         self.jinja_env = jinja2.Environment(
             block_start_string="\BLOCK{",
             block_end_string="}",
@@ -77,7 +79,21 @@ class TemplatesRendering:
                     template_config.get("variables", []), tenant_variables
                 )
                 print(f"tpl_variables: {tpl_variables}")
-                print(self.render_template(template_content, tpl_variables))
+                rendered_content = self.render_template(
+                    template_content, tpl_variables
+                )
+                print(f"rendered_content: {rendered_content}")
+                destination_dir = join(
+                    self.config.TARGET_DIR,
+                    tenant_name,
+                )
+                destination_filepath = join(
+                    destination_dir,
+                    template_config.get("destination_filename", ""),
+                )
+                print(f"destination_filepath: {destination_filepath}")
+                create_dir(destination_dir)
+                write_to_file(destination_filepath, rendered_content)
 
     def render_template(self, template: str, variables: dict) -> dict:
         new_template = self.jinja_env.from_string(template)
