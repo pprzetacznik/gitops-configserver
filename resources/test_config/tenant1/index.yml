@@ -17,6 +17,8 @@ configs:
         tpl_variable: template_var2
       - tenant_variable: ccc
         tpl_variable: template_var3
+      - tenant_variable: ddd
+        tpl_variable: template_var4
     repo_name: test_repo1
     destination_filename: config1.yml
     environment: prod

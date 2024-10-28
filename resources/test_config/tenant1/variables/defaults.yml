@@ -1,3 +1,8 @@
 aaa: aaa1.default
 bbb: bbb1.default
 ccc: ccc1.default
+ddd:
+  - abc: 1
+    def: 2
+    ghi: 3
+  - mmm: 4

@@ -27,5 +27,10 @@ def test_rendering(templates_rendering, config):
         == """- my_config:
   - var1: aaa1.default
   - var2: bbb1.default
-  - var3: ccc1.default"""
+  - var3: ccc1.default
+  - lll: |
+    - abc: 1
+      def: 2
+      ghi: 3
+    - mmm: 4"""
     )

@@ -1,9 +1,10 @@
 from os.path import join
 import logging
 import jinja2
-import yaml
+from yaml import dump, safe_load
 from gitops_configserver.config import Config
 from gitops_configserver.utils import create_dir, read_file, write_to_file
+
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +28,7 @@ class TenantsConfigLoader:
     def _load_yaml_file(self, filename):
         filepath = join(self.config.CONFIG_DIR, filename)
         with open(filepath, "r") as f:
-            content_dict = yaml.safe_load(f.read())
+            content_dict = safe_load(f.read())
         return content_dict
 
 
@@ -47,6 +48,9 @@ class TemplatesRendering:
             line_comment_prefix="%#",
             trim_blocks=True,
             autoescape=False,
+        )
+        self.jinja_env.filters.update(
+            {"to_yaml": lambda data: dump(data).strip()}
         )
 
     def render(self):
