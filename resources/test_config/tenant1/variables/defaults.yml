@@ -6,3 +6,7 @@ ddd:
     def: 2
     ghi: 3
   - mmm: 4
+python_version:
+  - 3.10
+  - 3.11
+  - 3.12

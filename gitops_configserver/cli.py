@@ -1,8 +1,11 @@
 from argparse import Namespace, ArgumentParser
 from abc import ABC, abstractmethod
+import logging
 from gitops_configserver.config import setup_logger, Config
-from gitops_configserver.templates_rendering import TemplatesRendering
 from gitops_configserver.server import ConfigServer
+from gitops_configserver.workflow import Workflow
+
+logger = logging.getLogger(__name__)
 
 
 class AbstractArgumentsHandler(ABC):
@@ -21,8 +24,7 @@ class ConfigGeneratorHandler(AbstractArgumentsHandler):
     def execute(self, args):
         config = Config()
         config.CONFIG_DIR = args.config_dir
-        templates_rendering = TemplatesRendering(config)
-        templates_rendering.render()
+        Workflow(config).execute()
         print("HELLO WORLD")
 
     def add_parser(self, subparsers):
@@ -34,6 +36,14 @@ class ConfigGeneratorHandler(AbstractArgumentsHandler):
             help="Config directory",
             dest="config_dir",
             required=True,
+        )
+        parser_config_generator.add_argument(
+            "--environment",
+            type=str,
+            help="Environment",
+            dest="environment",
+            default="dev",
+            required=False,
         )
 
 

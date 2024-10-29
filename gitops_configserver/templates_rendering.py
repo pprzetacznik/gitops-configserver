@@ -1,3 +1,4 @@
+from itertools import product
 from os.path import join
 import logging
 import jinja2
@@ -38,11 +39,11 @@ class TemplatesRendering:
         self.config = config
         self.tenants_config_loader = TenantsConfigLoader(config)
         self.jinja_env = jinja2.Environment(
-            block_start_string="\BLOCK{",
+            block_start_string=r"\BLOCK{",
             block_end_string="}",
             variable_start_string="{",
             variable_end_string="}",
-            comment_start_string="\#{",
+            comment_start_string=r"\#{",
             comment_end_string="}",
             line_statement_prefix="%%",
             line_comment_prefix="%#",
@@ -53,23 +54,18 @@ class TemplatesRendering:
             {"to_yaml": lambda data: dump(data).strip()}
         )
 
-    def render(self):
-        create_dir(self.config.TARGET_DIR)
-        tenants_list = self.tenants_config_loader.index().get("tenants", [])
-        print(tenants_list)
-        for tenant_name in tenants_list:
-            tenant_variables = self.tenants_config_loader.variables(tenant_name)
-            print(f"tenant_variables: {tenant_variables}")
-            tenant_config = self.tenants_config_loader.tenant(tenant_name)
-            print(tenant_config)
-            for template_config in tenant_config.get("configs"):
-                print(template_config)
-                template_variables_mapping = template_config.get(
-                    "variables", []
-                )
-                print(
-                    f"template_variables_mapping: {template_variables_mapping}"
-                )
+    def render(self, tenant_name):
+        tenant_variables = self.tenants_config_loader.variables(tenant_name)
+        tenant_config = self.tenants_config_loader.tenant(tenant_name)
+
+        for template_config in tenant_config.get("configs"):
+            template_variables_mapping = template_config.get("variables", [])
+
+            matrix = template_config.get("matrix", {})
+            resolved_variants = MatrixResolver.resolve(matrix, tenant_variables)
+            matrix_include = template_config.get("matrix_include", [])
+            variants = resolved_variants + matrix_include
+            for variant in variants:
                 template_content = read_file(
                     join(
                         self.config.CONFIG_DIR,
@@ -78,30 +74,63 @@ class TemplatesRendering:
                         template_config.get("template_file"),
                     )
                 )
-                print(f"template_content: {template_content}")
+                logger.info(f"template_content: {template_content}")
                 tpl_variables = VariablesResolver.resolve_for_template(
                     template_config.get("variables", []), tenant_variables
                 )
-                print(f"tpl_variables: {tpl_variables}")
+                logger.info(f"tpl_variables: {tpl_variables}")
                 rendered_content = self.render_template(
                     template_content, tpl_variables
                 )
-                print(f"rendered_content: {rendered_content}")
+                logger.info(f"rendered_content: {rendered_content}")
                 destination_dir = join(
                     self.config.TARGET_DIR,
                     tenant_name,
                 )
-                destination_filepath = join(
-                    destination_dir,
+                destination_filename = TemplateResolver.resolve(
                     template_config.get("destination_filename", ""),
+                    {
+                        **tpl_variables,
+                        "environment": template_config.get("environment"),
+                        "matrix": variant,
+                    },
                 )
-                print(f"destination_filepath: {destination_filepath}")
+                destination_filepath = join(
+                    destination_dir, destination_filename
+                )
+                logger.info(f"destination_filepath: {destination_filepath}")
                 create_dir(destination_dir)
                 write_to_file(destination_filepath, rendered_content)
 
     def render_template(self, template: str, variables: dict) -> dict:
         new_template = self.jinja_env.from_string(template)
         return new_template.render(**variables)
+
+
+class TemplateResolver:
+    @staticmethod
+    def resolve(template_content, variables) -> str:
+        env = jinja2.Environment()
+        template = env.from_string(template_content)
+        output = template.render(**variables)
+        return output
+
+
+class MatrixResolver:
+    @staticmethod
+    def resolve(matrix, tenant_variables) -> list:
+        env = jinja2.Environment()
+        for key, value in matrix.items():
+            if isinstance(value, str):
+                template = env.from_string(value)
+                output = template.render(**tenant_variables)
+                matrix[key] = safe_load(output)
+
+        if not matrix:
+            return [{"_variant": "default"}]
+        keys, values = zip(*matrix.items())
+        permutations_dicts = [dict(zip(keys, v)) for v in product(*values)]
+        return permutations_dicts
 
 
 class VariablesResolver:

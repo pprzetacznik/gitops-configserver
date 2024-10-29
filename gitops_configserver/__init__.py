@@ -9,6 +9,6 @@ def read(fname):
 
 
 try:
-    __version__ = metadata.version("gitops-mt")
+    __version__ = metadata.version("gitops-configserver")
 except PackageNotFoundError:
     __version__ = read(join("..", "VERSION")).strip()

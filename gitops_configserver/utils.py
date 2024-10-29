@@ -1,10 +1,14 @@
-from os import makedirs
+from os import makedirs, path
 from shutil import rmtree
 from yaml import safe_load
 
 
 def create_dir(path):
     makedirs(path, exist_ok=True)
+
+
+def file_exists(fname):
+    return path.isfile(fname)
 
 
 def read_file(filepath):

@@ -1,21 +1,16 @@
 from os import getenv, path
+from datetime import datetime
 import logging
 import logging.config
-import yaml
-
-
-def file_exists(fname):
-    return path.isfile(fname)
+from gitops_configserver.utils import file_exists, load_yaml, create_dir
 
 
 def setup_logger():
     if file_exists(Config.LOGGER_CONFIG_FILE):
-        with open(Config.LOGGER_CONFIG_FILE, "rt") as f:
-            config = yaml.safe_load(f.read())
+        config = load_yaml(Config.LOGGER_CONFIG_FILE)
         logging.config.dictConfig(config)
     else:
-        if not path.isdir("logs"):
-            os.makedirs("logs")
+        create_dir("logs")
         logging.basicConfig(
             level=logging.DEBUG,
             format="%(asctime)s %(name)-12s %(levelname)-8s %(message)s",
@@ -24,7 +19,7 @@ def setup_logger():
             filemode="w",
         )
         console = logging.StreamHandler()
-        console.setLevel(logging.INFO)
+        console.setLevel(logging.DEBUG)
         formatter = logging.Formatter(
             "%(name)-12s: %(levelname)-8s %(message)s"
         )

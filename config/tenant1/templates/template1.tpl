@@ -4,3 +4,4 @@
   - var2: {template_var3}
   - lll: |
     { template_var4 | to_yaml | indent }
+  - ccc

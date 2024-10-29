@@ -1,6 +1,6 @@
 from os.path import join
 from gitops_configserver.config import Config
-from gitops_configserver.templates_rendering import TemplatesRendering
+from gitops_configserver.workflow import TemplatesRenderingCommand
 from gitops_configserver.utils import read_file, remove_dir_with_content
 from pytest import fixture
 
@@ -14,14 +14,20 @@ def config():
 
 
 @fixture
-def templates_rendering(config):
-    yield TemplatesRendering(config)
+def templates_rendering_command(config):
+    yield TemplatesRenderingCommand(config)
     # remove_dir_with_content(config.TARGET_DIR)
 
 
-def test_rendering(templates_rendering, config):
-    templates_rendering.render()
-    content = read_file(join(config.TARGET_DIR, "tenant1", "config1.yml"))
+def test_rendering(templates_rendering_command, config):
+    templates_rendering_command.execute()
+    content = read_file(
+        join(
+            config.TARGET_DIR,
+            "tenant1",
+            "config1-ubuntu-22.04-10-python3.7-prod.yml",
+        )
+    )
     assert (
         content
         == """- my_config:
