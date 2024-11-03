@@ -28,3 +28,12 @@ $ python -m gitops_server.cli server --config_dir=config
 $ curl http://localhost:8002/configs
 {"tenants":["tenant1"]}
 ```
+
+## Setting up GitHub tokens
+
+* Go to Setting -> Developer Settings -> Fine-grained personal access tokens
+* Create a token with following settings:
+  * `Only select repositories` and select your repository
+  * `Repository permissions` and select `Content`
+
+Set the token as `$GH_PAT` in your local environment.

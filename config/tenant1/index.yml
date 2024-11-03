@@ -20,7 +20,7 @@ configs:
         tpl_variable: template_var3
       - tenant_variable: ddd
         tpl_variable: template_var4
-    destination_repo: test_repo1
+    destination_repo: gitops-configserver-tests
     destination_filename: tenant1/config1-{{matrix.os}}-{{matrix.version}}-{{matrix.python_version}}-{{environment}}.yml
     environment: prod
     matrix:
@@ -41,6 +41,6 @@ configs:
         tpl_variable: template_var3
       - tenant_variable: ddd
         tpl_variable: template_var4
-    destination_repo: test_repo1
+    destination_repo: gitops-configserver-tests
     destination_filename: config1-{{environment}}.yml
     environment: prod

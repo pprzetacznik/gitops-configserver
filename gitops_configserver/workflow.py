@@ -50,7 +50,7 @@ class GitRepositoriesCommitterCommand(WorkflowCommand):
             # tenant_config = self.tenants_config_loader.tenant(tenant_name)
             for file_entry in request[tenant_name]["files"]:
                 if file_entry.get("repo") in global_repositories:
-                    global_repositories[repository_name]["files"] += [
+                    global_repositories[file_entry.get("repo")]["files"] += [
                         file_entry
                     ]
         logger.info(f"global_repositories: {global_repositories}")

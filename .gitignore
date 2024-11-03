@@ -2,6 +2,7 @@ __pycache__
 *.egg-info
 *.pyc
 build
+dist
 *.log
 target
 target_test_configserver
