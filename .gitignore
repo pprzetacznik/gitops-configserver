@@ -6,3 +6,4 @@ dist
 *.log
 target
 target_test_configserver
+docs_build
