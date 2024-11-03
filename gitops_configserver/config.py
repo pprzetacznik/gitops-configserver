@@ -41,3 +41,5 @@ class Config:
 
     HOST = getenv("GITOPS_CONFIGSERVER__HOST", "0.0.0.0")
     PORT = getenv("GITOPS_CONFIGSERVER__PORT", "8002")
+
+    GH_PAT = getenv("GH_PAT")

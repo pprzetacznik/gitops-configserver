@@ -1,8 +1,8 @@
 from os.path import join
+from pytest import fixture
 from gitops_configserver.config import Config
 from gitops_configserver.workflow import TemplatesRenderingCommand
 from gitops_configserver.utils import read_file, remove_dir_with_content
-from pytest import fixture
 
 
 @fixture
@@ -20,12 +20,123 @@ def templates_rendering_command(config):
 
 
 def test_rendering(templates_rendering_command, config):
-    templates_rendering_command.execute()
+    repo_files = templates_rendering_command.execute()
+    assert repo_files == {
+        "tenant1": {
+            "repositories": {
+                "test_repo1": {"type": "local", "url": "local_path"}
+            },
+            "files": [
+                {
+                    "tmp_path": "target_test_configserver/tenant1/asdf/config1-ubuntu-22.04-10-python3.10-prod.yml",
+                    "destination_filename": "asdf/config1-ubuntu-22.04-10-python3.10-prod.yml",
+                    "repo": "gitops-configserver-tests",
+                },
+                {
+                    "tmp_path": "target_test_configserver/tenant1/asdf/config1-ubuntu-22.04-10-python3.11-prod.yml",
+                    "destination_filename": "asdf/config1-ubuntu-22.04-10-python3.11-prod.yml",
+                    "repo": "gitops-configserver-tests",
+                },
+                {
+                    "tmp_path": "target_test_configserver/tenant1/asdf/config1-ubuntu-22.04-10-python3.12-prod.yml",
+                    "destination_filename": "asdf/config1-ubuntu-22.04-10-python3.12-prod.yml",
+                    "repo": "gitops-configserver-tests",
+                },
+                {
+                    "tmp_path": "target_test_configserver/tenant1/asdf/config1-ubuntu-22.04-12-python3.10-prod.yml",
+                    "destination_filename": "asdf/config1-ubuntu-22.04-12-python3.10-prod.yml",
+                    "repo": "gitops-configserver-tests",
+                },
+                {
+                    "tmp_path": "target_test_configserver/tenant1/asdf/config1-ubuntu-22.04-12-python3.11-prod.yml",
+                    "destination_filename": "asdf/config1-ubuntu-22.04-12-python3.11-prod.yml",
+                    "repo": "gitops-configserver-tests",
+                },
+                {
+                    "tmp_path": "target_test_configserver/tenant1/asdf/config1-ubuntu-22.04-12-python3.12-prod.yml",
+                    "destination_filename": "asdf/config1-ubuntu-22.04-12-python3.12-prod.yml",
+                    "repo": "gitops-configserver-tests",
+                },
+                {
+                    "tmp_path": "target_test_configserver/tenant1/asdf/config1-ubuntu-22.04-14-python3.10-prod.yml",
+                    "destination_filename": "asdf/config1-ubuntu-22.04-14-python3.10-prod.yml",
+                    "repo": "gitops-configserver-tests",
+                },
+                {
+                    "tmp_path": "target_test_configserver/tenant1/asdf/config1-ubuntu-22.04-14-python3.11-prod.yml",
+                    "destination_filename": "asdf/config1-ubuntu-22.04-14-python3.11-prod.yml",
+                    "repo": "gitops-configserver-tests",
+                },
+                {
+                    "tmp_path": "target_test_configserver/tenant1/asdf/config1-ubuntu-22.04-14-python3.12-prod.yml",
+                    "destination_filename": "asdf/config1-ubuntu-22.04-14-python3.12-prod.yml",
+                    "repo": "gitops-configserver-tests",
+                },
+                {
+                    "tmp_path": "target_test_configserver/tenant1/asdf/config1-ubuntu-20.04-10-python3.10-prod.yml",
+                    "destination_filename": "asdf/config1-ubuntu-20.04-10-python3.10-prod.yml",
+                    "repo": "gitops-configserver-tests",
+                },
+                {
+                    "tmp_path": "target_test_configserver/tenant1/asdf/config1-ubuntu-20.04-10-python3.11-prod.yml",
+                    "destination_filename": "asdf/config1-ubuntu-20.04-10-python3.11-prod.yml",
+                    "repo": "gitops-configserver-tests",
+                },
+                {
+                    "tmp_path": "target_test_configserver/tenant1/asdf/config1-ubuntu-20.04-10-python3.12-prod.yml",
+                    "destination_filename": "asdf/config1-ubuntu-20.04-10-python3.12-prod.yml",
+                    "repo": "gitops-configserver-tests",
+                },
+                {
+                    "tmp_path": "target_test_configserver/tenant1/asdf/config1-ubuntu-20.04-12-python3.10-prod.yml",
+                    "destination_filename": "asdf/config1-ubuntu-20.04-12-python3.10-prod.yml",
+                    "repo": "gitops-configserver-tests",
+                },
+                {
+                    "tmp_path": "target_test_configserver/tenant1/asdf/config1-ubuntu-20.04-12-python3.11-prod.yml",
+                    "destination_filename": "asdf/config1-ubuntu-20.04-12-python3.11-prod.yml",
+                    "repo": "gitops-configserver-tests",
+                },
+                {
+                    "tmp_path": "target_test_configserver/tenant1/asdf/config1-ubuntu-20.04-12-python3.12-prod.yml",
+                    "destination_filename": "asdf/config1-ubuntu-20.04-12-python3.12-prod.yml",
+                    "repo": "gitops-configserver-tests",
+                },
+                {
+                    "tmp_path": "target_test_configserver/tenant1/asdf/config1-ubuntu-20.04-14-python3.10-prod.yml",
+                    "destination_filename": "asdf/config1-ubuntu-20.04-14-python3.10-prod.yml",
+                    "repo": "gitops-configserver-tests",
+                },
+                {
+                    "tmp_path": "target_test_configserver/tenant1/asdf/config1-ubuntu-20.04-14-python3.11-prod.yml",
+                    "destination_filename": "asdf/config1-ubuntu-20.04-14-python3.11-prod.yml",
+                    "repo": "gitops-configserver-tests",
+                },
+                {
+                    "tmp_path": "target_test_configserver/tenant1/asdf/config1-ubuntu-20.04-14-python3.12-prod.yml",
+                    "destination_filename": "asdf/config1-ubuntu-20.04-14-python3.12-prod.yml",
+                    "repo": "gitops-configserver-tests",
+                },
+                {
+                    "tmp_path": "target_test_configserver/tenant1/asdf/config1-ubuntu-22.04-10-python3.7-prod.yml",
+                    "destination_filename": "asdf/config1-ubuntu-22.04-10-python3.7-prod.yml",
+                    "repo": "gitops-configserver-tests",
+                },
+                {
+                    "tmp_path": "target_test_configserver/tenant1/config1-prod.yml",
+                    "destination_filename": "config1-prod.yml",
+                    "repo": "test_repo1",
+                },
+            ],
+        }
+    }
+    print(repo_files)
     content = read_file(
         join(
             config.TARGET_DIR,
             "tenant1",
-            "config1-ubuntu-22.04-10-python3.7-prod.yml",
+            "asdf",
+            "config1-ubuntu-22.04-10-python3.12-prod.yml",
         )
     )
     assert (

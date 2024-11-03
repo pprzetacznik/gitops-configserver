@@ -21,7 +21,7 @@ configs:
       - tenant_variable: ddd
         tpl_variable: template_var4
     destination_repo: test_repo1
-    destination_filename: config1-{{matrix.os}}-{{matrix.version}}-{{matrix.python_version}}-{{environment}}.yml
+    destination_filename: tenant1/config1-{{matrix.os}}-{{matrix.version}}-{{matrix.python_version}}-{{environment}}.yml
     environment: prod
     matrix:
       os: [ubuntu-22.04, ubuntu-20.04]

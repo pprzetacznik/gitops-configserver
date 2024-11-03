@@ -1,2 +1,9 @@
 tenants:
 - tenant1
+repositories:
+  test_repo1:
+    type: local
+    url: local_path
+  gitops-configserver-tests:
+    type: git
+    url: git@github.com:pprzetacznik/gitops-configserver-tests.git

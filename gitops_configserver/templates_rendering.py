@@ -1,5 +1,5 @@
 from itertools import product
-from os.path import join
+from os.path import join, dirname
 import logging
 import jinja2
 from yaml import dump, safe_load
@@ -54,17 +54,23 @@ class TemplatesRendering:
             {"to_yaml": lambda data: dump(data).strip()}
         )
 
-    def render(self, tenant_name):
+    def render(self, tenant_name) -> dict:
         tenant_variables = self.tenants_config_loader.variables(tenant_name)
         tenant_config = self.tenants_config_loader.tenant(tenant_name)
 
+        templates_dict = {
+            "repositories": tenant_config.get("repositories", {}),
+            "files": [],
+        }
+
         for template_config in tenant_config.get("configs"):
             template_variables_mapping = template_config.get("variables", [])
+            tpl_variables = VariablesResolver.resolve_for_template(
+                template_variables_mapping, tenant_variables
+            )
+            logger.info(f"tpl_variables: {tpl_variables}")
+            variants = self._get_variants(template_config, tenant_variables)
 
-            matrix = template_config.get("matrix", {})
-            resolved_variants = MatrixResolver.resolve(matrix, tenant_variables)
-            matrix_include = template_config.get("matrix_include", [])
-            variants = resolved_variants + matrix_include
             for variant in variants:
                 template_content = read_file(
                     join(
@@ -75,18 +81,12 @@ class TemplatesRendering:
                     )
                 )
                 logger.info(f"template_content: {template_content}")
-                tpl_variables = VariablesResolver.resolve_for_template(
-                    template_config.get("variables", []), tenant_variables
-                )
-                logger.info(f"tpl_variables: {tpl_variables}")
-                rendered_content = self.render_template(
+
+                rendered_content = self._render_template(
                     template_content, tpl_variables
                 )
                 logger.info(f"rendered_content: {rendered_content}")
-                destination_dir = join(
-                    self.config.TARGET_DIR,
-                    tenant_name,
-                )
+
                 destination_filename = TemplateResolver.resolve(
                     template_config.get("destination_filename", ""),
                     {
@@ -96,13 +96,34 @@ class TemplatesRendering:
                     },
                 )
                 destination_filepath = join(
-                    destination_dir, destination_filename
+                    self.config.TARGET_DIR, tenant_name, destination_filename
                 )
                 logger.info(f"destination_filepath: {destination_filepath}")
-                create_dir(destination_dir)
+                create_dir(dirname(destination_filepath))
                 write_to_file(destination_filepath, rendered_content)
 
-    def render_template(self, template: str, variables: dict) -> dict:
+                templates_dict["files"] += [
+                    {
+                        "tmp_path": destination_filepath,
+                        "destination_filename": destination_filename,
+                        "repo": template_config.get(
+                            "destination_repo", "local"
+                        ),
+                    }
+                ]
+
+        return templates_dict
+
+    def _get_variants(
+        self, template_config: dict, tenant_variables: dict
+    ) -> list:
+        matrix = template_config.get("matrix", {})
+        matrix_include = template_config.get("matrix_include", [])
+        resolved_variants = MatrixResolver.resolve(matrix, tenant_variables)
+        variants = resolved_variants + matrix_include
+        return variants
+
+    def _render_template(self, template: str, variables: dict) -> str:
         new_template = self.jinja_env.from_string(template)
         return new_template.render(**variables)
 

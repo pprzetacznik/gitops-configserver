@@ -20,8 +20,8 @@ configs:
         tpl_variable: template_var3
       - tenant_variable: ddd
         tpl_variable: template_var4
-    destination_repo: test_repo1
-    destination_filename: config1-{{matrix.os}}-{{matrix.version}}-{{matrix.python_version}}-{{environment}}.yml
+    destination_repo: gitops-configserver-tests
+    destination_filename: asdf/config1-{{matrix.os}}-{{matrix.version}}-python{{matrix.python_version}}-{{environment}}.yml
     environment: prod
     matrix:
       os: [ubuntu-22.04, ubuntu-20.04]
@@ -30,7 +30,7 @@ configs:
     matrix_include:
       - os: 'ubuntu-22.04'
         version: '10'
-        python_version: 'python3.7'
+        python_version: '3.7'
   - template_file: template1.tpl
     variables:
       - tenant_variable: aaa
