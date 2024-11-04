@@ -25,6 +25,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Deploy package
       run: |
+        ./run.sh generate_version
         pip install twine wheel
         pip install build setuptools
         python -m build --sdist --wheel

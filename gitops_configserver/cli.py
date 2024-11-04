@@ -13,11 +13,11 @@ class AbstractArgumentsHandler(ABC):
 
     @abstractmethod
     def execute(self, args) -> None:
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def add_parser(self, subparsers):
-        pass
+        raise NotImplementedError
 
 
 class ConfigGeneratorHandler(AbstractArgumentsHandler):
@@ -25,7 +25,7 @@ class ConfigGeneratorHandler(AbstractArgumentsHandler):
         config = Config()
         config.CONFIG_DIR = args.config_dir
         Workflow(config).execute()
-        print("HELLO WORLD")
+        print('{"status": "ok"}')
 
     def add_parser(self, subparsers):
         parser_config_generator = subparsers.add_parser("config_gen")

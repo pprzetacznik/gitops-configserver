@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from logging import getLogger
+from typing import Optional
 from gitops_configserver.templates_rendering import (
     TemplatesRendering,
     TenantsConfigLoader,
@@ -12,8 +13,8 @@ logger = getLogger(__name__)
 
 class WorkflowCommand(ABC):
     @abstractmethod
-    def execute(self, request: dict = None) -> None:
-        pass
+    def execute(self, request: Optional[dict] = None) -> dict:
+        raise NotImplementedError
 
 
 class TemplatesRenderingCommand(WorkflowCommand):
@@ -21,7 +22,7 @@ class TemplatesRenderingCommand(WorkflowCommand):
         self.config = config
         self.tenants_config_loader = TenantsConfigLoader(config)
 
-    def execute(self, request: dict = None) -> dict:
+    def execute(self, request: Optional[dict] = None) -> dict:
         create_dir(self.config.TARGET_DIR)
         tenants_list = self.tenants_config_loader.index().get("tenants", [])
         repo_files = {}
@@ -33,13 +34,15 @@ class TemplatesRenderingCommand(WorkflowCommand):
         return repo_files
 
 
-class GitRepositoriesCommitterCommand(WorkflowCommand):
+class ProvisioningCommand(WorkflowCommand):
     def __init__(self, config):
         self.config = config
         self.tenants_config_loader = TenantsConfigLoader(config)
         self.git_wrapper = GitWrapper(self.config)
 
-    def execute(self, request: dict = None) -> dict:
+    def execute(self, request: Optional[dict] = None) -> dict:
+        if not request:
+            return {}
         tenants_list = self.tenants_config_loader.index().get("tenants", [])
         global_repositories = self.tenants_config_loader.index().get(
             "repositories", []
@@ -65,7 +68,7 @@ class Workflow:
         self.request = {}
 
     def execute(self) -> None:
-        commands = [TemplatesRenderingCommand, GitRepositoriesCommitterCommand]
+        commands = [TemplatesRenderingCommand, ProvisioningCommand]
         for command in commands:
             response = command(self.config).execute(self.request)
             self.request = response

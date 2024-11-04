@@ -36,7 +36,7 @@ class Config:
         "GITOPS_CONFIGSERVER__LOGGER_CONFIG_FILE",
         path.join("resources", "logger.yaml"),
     )
-    CONFIG_DIR = getenv("GITOPS_CONFIGSERVER__CONFIG_DIR")
+    CONFIG_DIR = getenv("GITOPS_CONFIGSERVER__CONFIG_DIR", "config")
     TARGET_DIR = getenv("GITOPS_CONFIGSERVER__TARGET_DIR", "target")
 
     HOST = getenv("GITOPS_CONFIGSERVER__HOST", "0.0.0.0")
