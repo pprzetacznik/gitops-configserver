@@ -1,10 +1,8 @@
 tenant_name: tenant1
-variables:
-  - "defaults.yml"
-  - "{environment}.yml"
-environments:
-  - dev.yml
-  - prod.yml
+hierarchy:
+  - nodes/{nodes}.yml
+  - environments/{environment}.yml
+  - defaults.yml
 repositories:
   test_repo1:
     type: local

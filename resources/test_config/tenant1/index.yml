@@ -1,10 +1,4 @@
 tenant_name: tenant1
-variables:
-  - "defaults.yml"
-  - "{environment}.yml"
-environments:
-  - dev.yml
-  - prod.yml
 repositories:
   test_repo1:
     type: local

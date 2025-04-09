@@ -7,3 +7,8 @@ repositories:
   gitops-configserver-tests:
     type: git
     url: git@github.com:pprzetacznik/gitops-configserver-tests.git
+hierarchy:
+- nodes/{node}.yaml
+- environments/{environment}.yaml
+- branches/{branch}.yaml
+- defaults.yml

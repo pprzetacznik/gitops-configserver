@@ -1,2 +1,3 @@
 aaa: aaa1.prod
 bbb: bbb1.prod
+environment: prod

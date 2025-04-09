@@ -22,8 +22,8 @@ class TenantsConfigLoader:
         filepath = join(tenant_name, "index.yml")
         return self._load_yaml_file(filepath)
 
-    def variables(self, tenant_name):
-        filepath = join(tenant_name, "variables", "defaults.yml")
+    def variables(self, tenant_name, variable_file="defaults.yml"):
+        filepath = join(tenant_name, "variables", variable_file)
         return self._load_yaml_file(filepath)
 
     def _load_yaml_file(self, filename):
