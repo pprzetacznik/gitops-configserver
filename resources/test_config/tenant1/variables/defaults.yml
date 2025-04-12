@@ -10,3 +10,7 @@ python_version:
   - "3.10"
   - "3.11"
   - "3.12"
+nested:
+  node:
+    key: value1
+    key2: value2

@@ -4,33 +4,12 @@ import logging
 import jinja2
 from yaml import dump, safe_load
 from gitops_configserver.config import Config
+from gitops_configserver.config_loader import TenantsConfigLoader
 from gitops_configserver.utils import create_dir, read_file, write_to_file
+from gitops_configserver.hieradata_resolver import HieradataResolver
 
 
 logger = logging.getLogger(__name__)
-
-
-class TenantsConfigLoader:
-    def __init__(self, config):
-        self.config = config
-
-    def index(self):
-        filepath = "index.yml"
-        return self._load_yaml_file(filepath)
-
-    def tenant(self, tenant_name):
-        filepath = join(tenant_name, "index.yml")
-        return self._load_yaml_file(filepath)
-
-    def variables(self, tenant_name, variable_file="defaults.yml"):
-        filepath = join(tenant_name, "variables", variable_file)
-        return self._load_yaml_file(filepath)
-
-    def _load_yaml_file(self, filename):
-        filepath = join(self.config.CONFIG_DIR, filename)
-        with open(filepath, "r") as f:
-            content_dict = safe_load(f.read())
-        return content_dict
 
 
 class TemplatesRendering:
@@ -50,12 +29,15 @@ class TemplatesRendering:
             trim_blocks=True,
             autoescape=False,
         )
+        self.hieradata_resolver = HieradataResolver(self.config)
         self.jinja_env.filters.update(
             {"to_yaml": lambda data: dump(data).strip()}
         )
 
     def render(self, tenant_name) -> dict:
-        tenant_variables = self.tenants_config_loader.variables(tenant_name)
+        tenant_variables = self.hieradata_resolver.render(
+            tenant_name, self.config.FACTS
+        )
         tenant_config = self.tenants_config_loader.tenant(tenant_name)
 
         templates_dict = {

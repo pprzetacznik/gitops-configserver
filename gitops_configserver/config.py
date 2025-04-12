@@ -43,3 +43,5 @@ class Config:
     PORT = getenv("GITOPS_CONFIGSERVER__PORT", "8002")
 
     GH_PAT = getenv("GH_PAT")
+
+    FACTS: dict = {}

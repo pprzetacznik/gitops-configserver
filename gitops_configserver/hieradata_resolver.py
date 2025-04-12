@@ -1,7 +1,7 @@
 from jinja2 import Environment, StrictUndefined
 from jinja2.exceptions import UndefinedError
 from gitops_configserver.config import Config
-from gitops_configserver.templates_rendering import TenantsConfigLoader
+from gitops_configserver.config_loader import TenantsConfigLoader
 
 
 class HieradataResolver:
@@ -14,6 +14,16 @@ class HieradataResolver:
             variable_end_string="}",
             undefined=StrictUndefined,
         )
+
+    def _merge(self, source: dict, destination: dict) -> dict:
+        for source_key, source_value in source.items():
+            if isinstance(source_value, dict):
+                destination[source_key] = self._merge(
+                    source_value, destination.get(source_key, {})
+                )
+            else:
+                destination[source_key] = source_value
+        return destination
 
     def _resolve_hierarchy(self, hierarchy: list, facts: dict) -> list:
         resolved_hierarchy = []
@@ -35,5 +45,5 @@ class HieradataResolver:
             overlay_variables = self.tenants_config_loader.variables(
                 tenant_name, hiera
             )
-            final_variables = {**final_variables, **overlay_variables}
+            final_variables = self._merge(overlay_variables, final_variables)
         return final_variables

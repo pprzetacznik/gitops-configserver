@@ -1,1 +1,9 @@
 node: node1
+ddd:
+  - abc: 1
+    def: 333
+  - mmm: 444
+nested:
+  node:
+    key: value1
+    key2: value2_node1
