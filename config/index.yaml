@@ -11,6 +11,6 @@ repositories:
     type: git
     url: git@github.com:pprzetacznik/gitops-configserver-tests.git
 hierarchy:
-- nodes/{node}.yml
-- environments/{environment}.yml
-- defaults.yml
+- nodes/{node}.yaml
+- environments/{environment}.yaml
+- defaults.yaml

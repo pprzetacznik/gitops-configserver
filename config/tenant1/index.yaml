@@ -1,8 +1,8 @@
 tenant_name: tenant1
 hierarchy:
-  - nodes/{nodes}.yml
-  - environments/{environment}.yml
-  - defaults.yml
+  - nodes/{nodes}.yaml
+  - environments/{environment}.yaml
+  - defaults.yaml
 repositories:
   test_repo1:
     type: local
@@ -19,7 +19,7 @@ configs:
       - tenant_variable: ddd
         tpl_variable: template_var4
     destination_repo: gitops-configserver-tests
-    destination_filename: tenant1/config1-{{matrix.os}}-{{matrix.version}}-{{matrix.python_version}}-{{environment}}.yml
+    destination_filename: tenant1/config1-{{matrix.os}}-{{matrix.version}}-{{matrix.python_version}}-{{environment}}.yaml
     environment: prod
     matrix:
       os: [ubuntu-22.04, ubuntu-20.04]
@@ -40,5 +40,5 @@ configs:
       - tenant_variable: ddd
         tpl_variable: template_var4
     destination_repo: gitops-configserver-tests
-    destination_filename: config1-{{environment}}.yml
+    destination_filename: config1-{{environment}}.yaml
     environment: prod

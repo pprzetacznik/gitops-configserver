@@ -1,0 +1,3 @@
+build:
+  my_application:
+    { build.my_application.matrix | variants_matrix_resolver | to_yaml | indent }

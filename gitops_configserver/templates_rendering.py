@@ -1,6 +1,6 @@
 from itertools import product
 from os.path import join, dirname
-import logging
+from logging import getLogger
 import jinja2
 from yaml import dump, safe_load
 from gitops_configserver.config import Config
@@ -9,7 +9,52 @@ from gitops_configserver.utils import create_dir, read_file, write_to_file
 from gitops_configserver.hieradata_resolver import HieradataResolver
 
 
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
+
+
+class TemplateRendering:
+    def __init__(self, config: Config):
+        self.config = config
+        self.tenants_config_loader = TenantsConfigLoader(config)
+        self.jinja_env = jinja2.Environment(
+            block_start_string=r"\BLOCK{",
+            block_end_string="}",
+            variable_start_string="{",
+            variable_end_string="}",
+            comment_start_string=r"\#{",
+            comment_end_string="}",
+            line_statement_prefix="%%",
+            line_comment_prefix="%#",
+            trim_blocks=True,
+            autoescape=False,
+        )
+        self.hieradata_resolver = HieradataResolver(self.config)
+        self.jinja_env.filters.update(
+            {
+                "to_yaml": lambda data: dump(data).strip(),
+                "variants_matrix_resolver": lambda data: VariantsMatrixResolver.resolve(
+                    data, self.tenant_variables
+                ),
+            },
+        )
+
+    def _render_template(self, template: str, variables: dict) -> str:
+        new_template = self.jinja_env.from_string(template)
+        return new_template.render(**variables)
+
+    def render(self, tenant_name, template_name, facts):
+        self.tenant_variables = self.hieradata_resolver.render(
+            tenant_name, facts
+        )
+        template_content = read_file(
+            join(
+                self.config.CONFIG_DIR, tenant_name, "templates", template_name
+            )
+        )
+        rendered_content = self._render_template(
+            template_content, self.tenant_variables
+        )
+        return rendered_content
 
 
 class TemplatesRendering:
@@ -45,7 +90,7 @@ class TemplatesRendering:
             "files": [],
         }
 
-        for template_config in tenant_config.get("configs"):
+        for template_config in tenant_config.get("configs", {}):
             template_variables_mapping = template_config.get("variables", [])
             tpl_variables = VariablesResolver.resolve_for_template(
                 template_variables_mapping, tenant_variables
@@ -117,6 +162,24 @@ class TemplateResolver:
         template = env.from_string(template_content)
         output = template.render(**variables)
         return output
+
+
+class VariantsMatrixResolver:
+    @staticmethod
+    def resolve(matrix, tenant_variables) -> list:
+        env = jinja2.Environment()
+        for key, value in matrix.items():
+            if isinstance(value, str):
+                template = env.from_string(value)
+                output = template.render(**tenant_variables)
+                matrix[key] = safe_load(output)
+        matrix_filtered = {
+            k: v for k, v in matrix.items() if k not in ["include"]
+        }
+        keys, values = zip(*matrix_filtered.items())
+        permutations_dicts = [dict(zip(keys, v)) for v in product(*values)]
+        permutations_dicts += matrix.get("include", {})
+        return permutations_dicts or []
 
 
 class MatrixResolver:

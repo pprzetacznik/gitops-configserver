@@ -1,0 +1,4 @@
+build:
+  my_application:
+    matrix:
+      env: [test]

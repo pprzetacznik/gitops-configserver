@@ -15,7 +15,7 @@ configs:
       - tenant_variable: ddd
         tpl_variable: template_var4
     destination_repo: gitops-configserver-tests
-    destination_filename: asdf/config1-{{matrix.os}}-{{matrix.version}}-python{{matrix.python_version}}-{{environment}}.yml
+    destination_filename: asdf/config1-{{matrix.os}}-{{matrix.version}}-python{{matrix.python_version}}-{{environment}}.yaml
     environment: prod
     matrix:
       os: [ubuntu-22.04, ubuntu-20.04]
@@ -36,5 +36,5 @@ configs:
       - tenant_variable: ddd
         tpl_variable: template_var4
     destination_repo: test_repo1
-    destination_filename: config1-{{environment}}.yml
+    destination_filename: config1-{{environment}}.yaml
     environment: prod

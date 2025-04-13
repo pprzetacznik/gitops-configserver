@@ -1,5 +1,6 @@
 tenants:
 - tenant1
+- tenant2
 repositories:
   test_repo1:
     type: local
@@ -11,4 +12,4 @@ hierarchy:
 - nodes/{node}.yaml
 - environments/{environment}.yaml
 - branches/{branch}.yaml
-- defaults.yml
+- defaults.yaml

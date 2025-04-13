@@ -10,7 +10,7 @@ blueprint = Blueprint("configs", __name__)
 class ConfigsAPI(Resource):
     def get(self):
         config = config_provider.app.config["config"]
-        filename = join(config.CONFIG_DIR, "index.yml")
+        filename = join(config.CONFIG_DIR, "index.yaml")
         index = load_yaml(filename)
         return jsonify(index)
 

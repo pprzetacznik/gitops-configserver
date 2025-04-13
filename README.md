@@ -45,3 +45,10 @@ $ curl http://localhost:8002/configs
   * `Repository permissions` and select `Content`
 
 Set the token as `$GH_PAT` in your local environment.
+
+## Publish new release
+
+```
+$ git tag v1.0
+$ git push origin v1.0
+```

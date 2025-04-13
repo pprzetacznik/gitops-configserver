@@ -19,4 +19,12 @@ case $ACTION in
   server)
     python -m gitops_configserver.cli server --config_dir=config
     ;;
+  template_gen)
+    python -m gitops_configserver.cli \
+      template_gen \
+      --config_dir=resources/test_config \
+      --tenant_name=tenant2 \
+      --template_name=build_variants.yaml \
+      --facts='{"environment": "prod"}'
+    ;;
 esac

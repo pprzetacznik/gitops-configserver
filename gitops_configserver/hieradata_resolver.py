@@ -1,7 +1,11 @@
+from logging import getLogger
 from jinja2 import Environment, StrictUndefined
 from jinja2.exceptions import UndefinedError
 from gitops_configserver.config import Config
 from gitops_configserver.config_loader import TenantsConfigLoader
+
+
+logger = getLogger(__name__)
 
 
 class HieradataResolver:
@@ -33,12 +37,14 @@ class HieradataResolver:
                     self.jinja_env.from_string(hiera).render(**facts)
                 ]
             except UndefinedError:
-                pass
+                logger.info(
+                    "Some facts were not defined during resolution of hieradata structure"
+                )
         return resolved_hierarchy
 
     def render(self, tenant_name: str, facts: dict) -> dict:
         index = self.tenants_config_loader.index()
-        hierarchy = index.get("hierarchy")
+        hierarchy = index.get("hierarchy", [])
         resolved_hierarchy = self._resolve_hierarchy(hierarchy, facts)
         final_variables: dict = {}
         for hiera in reversed(resolved_hierarchy):

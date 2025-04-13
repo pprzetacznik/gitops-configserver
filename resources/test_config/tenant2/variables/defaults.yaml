@@ -1,0 +1,15 @@
+build:
+  my_application:
+    matrix:
+      include:
+      - env: dev
+        os: ubuntu18.04
+        python: python3.8
+      os:
+      - ubuntu22.04
+      - ubuntu24.04
+      python:
+      - 3.12
+      - 3.13
+      env: [dev]
+
