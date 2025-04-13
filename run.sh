@@ -25,6 +25,6 @@ case $ACTION in
       --config_dir=resources/test_config \
       --tenant_name=tenant2 \
       --template_name=build_variants.yaml \
-      --facts='{"environment": "prod"}'
+      --facts='{"environment": "test"}'
     ;;
 esac

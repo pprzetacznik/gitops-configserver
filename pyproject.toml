@@ -21,3 +21,6 @@ find = {}
 [tool.setuptools.dynamic]
 version = {file = "VERSION"}
 dependencies = { file = ["requirements.txt"] }
+
+[project.scripts]
+gitops-configserver = "gitops_configserver.cli:main"

@@ -12,7 +12,9 @@ Inspired by puppet, kustomized and GitOps practices.
 
 * multitenant templates
 * hieradata variables
+* template plugins
 * flask rest service
+* gitsync for config repository synchronization in web mode
 
 ## Usage
 
@@ -35,6 +37,36 @@ $ python -m gitops_server.cli server --config_dir=config
 ...
 $ curl http://localhost:8002/configs
 {"tenants":["tenant1"]}
+```
+
+## Using cli for generating config
+
+```
+$ pip install -e .
+$ gitops-configserver \
+      template_gen \
+      --config_dir=resources/test_config \
+      --tenant_name=tenant2 \
+      --template_name=build_variants.yaml \
+      --facts='{"environment": "test"}' > result1.txt
+$ cat result1.txt
+build:
+  my_application:
+    - env: test
+      os: ubuntu22.04
+      python: 3.12
+    - env: test
+      os: ubuntu22.04
+      python: 3.13
+    - env: test
+      os: ubuntu24.04
+      python: 3.12
+    - env: test
+      os: ubuntu24.04
+      python: 3.13
+    - env: dev
+      os: ubuntu18.04
+      python: python3.8
 ```
 
 ## Setting up GitHub tokens
