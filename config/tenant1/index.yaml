@@ -11,13 +11,13 @@ configs:
   - template_file: template1.tpl
     variables:
       - tenant_variable: aaa
-        tpl_variable: template_var1
+        tpl_variable: aaa
       - tenant_variable: bbb
-        tpl_variable: template_var2
+        tpl_variable: bbb
       - tenant_variable: ccc
-        tpl_variable: template_var3
+        tpl_variable: ccc
       - tenant_variable: ddd
-        tpl_variable: template_var4
+        tpl_variable: ddd
     destination_repo: gitops-configserver-tests
     destination_filename: tenant1/config1-{{matrix.os}}-{{matrix.version}}-{{matrix.python_version}}-{{environment}}.yaml
     environment: prod
@@ -32,13 +32,13 @@ configs:
   - template_file: template1.tpl
     variables:
       - tenant_variable: aaa
-        tpl_variable: template_var1
+        tpl_variable: aaa
       - tenant_variable: bbb
-        tpl_variable: template_var2
+        tpl_variable: bbb
       - tenant_variable: ccc
-        tpl_variable: template_var3
+        tpl_variable: ccc
       - tenant_variable: ddd
-        tpl_variable: template_var4
+        tpl_variable: ddd
     destination_repo: gitops-configserver-tests
     destination_filename: config1-{{environment}}.yaml
     environment: prod

@@ -31,6 +31,7 @@ def setup_logger():
 
 class Config:
     LOGS_VERBOSE = True
+    DEBUG = True
 
     LOGGER_CONFIG_FILE = getenv(
         "GITOPS_CONFIGSERVER__LOGGER_CONFIG_FILE",

@@ -37,6 +37,11 @@ $ python -m gitops_server.cli server --config_dir=config
 ...
 $ curl http://localhost:8002/configs
 {"tenants":["tenant1"]}
+$ curl -X GET \
+    -H "Content-type: application/json" \
+    -H "Accept: application/json" \
+    -d "{\"environment\": \"prod\"}" \
+    http://localhost:8002/configs/tenant1/template1.tpl
 ```
 
 ## Using cli for generating config

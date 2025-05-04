@@ -2,6 +2,7 @@
 
 set -xeuo pipefail
 
+ENVIRONMENT=dev
 ACTION=${1:-config_gen}
 
 function generate_version () {

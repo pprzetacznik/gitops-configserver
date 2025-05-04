@@ -12,4 +12,8 @@ class ConfigServer:
         config_provider.init_app(app)
         app.register_blueprint(configs.views.blueprint)
         app.config["config"] = self.config
-        app.run(host=self.config.HOST, port=self.config.PORT)
+        app.run(
+            host=self.config.HOST,
+            port=self.config.PORT,
+            debug=self.config.DEBUG,
+        )
