@@ -1,6 +1,8 @@
 pytest
 Jinja2
 pyyaml
+jsonschema
+types-jsonschema
 Flask
 flask-restful
 

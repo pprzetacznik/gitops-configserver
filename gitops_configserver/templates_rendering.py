@@ -1,11 +1,18 @@
 from itertools import product
-from os.path import join, dirname
+from os.path import join, dirname, basename
 from logging import getLogger
 import jinja2
+from json import load
 from yaml import dump, safe_load
+from jsonschema import validate
 from gitops_configserver.config import Config
 from gitops_configserver.config_loader import TenantsConfigLoader
-from gitops_configserver.utils import create_dir, read_file, write_to_file
+from gitops_configserver.utils import (
+    create_dir,
+    read_file,
+    write_to_file,
+    file_exists,
+)
 from gitops_configserver.hieradata_resolver import HieradataResolver
 
 
@@ -16,6 +23,7 @@ class TemplateRendering:
     def __init__(self, config: Config):
         self.config = config
         self.tenants_config_loader = TenantsConfigLoader(config)
+        self.schema_validator = SchemaValidator(config)
         self.jinja_env = jinja2.Environment(
             block_start_string=r"\BLOCK{",
             block_end_string="}",
@@ -46,15 +54,38 @@ class TemplateRendering:
         self.tenant_variables = self.hieradata_resolver.render(
             tenant_name, facts
         )
-        template_content = read_file(
-            join(
-                self.config.CONFIG_DIR, tenant_name, "templates", template_name
-            )
+        template_path = join(
+            self.config.CONFIG_DIR, tenant_name, "templates", template_name
         )
+        template_content = read_file(template_path)
         rendered_content = self._render_template(
             template_content, self.tenant_variables
         )
+        try:
+            validation_result = self.schema_validator.validate(
+                rendered_content, template_path
+            )
+        except Exception:
+            logger.warn("Validation failed")
         return rendered_content
+
+
+class SchemaValidator:
+    def __init__(self, config: Config):
+        self.config = config
+
+    def validate(self, rendered_content, template_path):
+        schema_path = dirname(template_path)
+        schema_filename = basename(template_path).split(".")[0] + ".schema.json"
+        schema_filepath = join(schema_path, schema_filename)
+
+        if not file_exists(schema_filepath):
+            logger.info("Skipping schema validation")
+            return True
+        instance = safe_load(rendered_content)
+        with open(schema_filepath) as f:
+            schema = load(f)
+        return validate(instance, schema)
 
 
 class TemplatesRendering:

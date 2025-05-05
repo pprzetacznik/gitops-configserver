@@ -1,0 +1,67 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$ref": "#/definitions/Welcome4",
+    "definitions": {
+        "Welcome4": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "build": {
+                    "$ref": "#/definitions/Build"
+                }
+            },
+            "required": [
+                "build"
+            ],
+            "title": "Welcome4"
+        },
+        "Build": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "my_application": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/MyApplication"
+                    }
+                }
+            },
+            "required": [
+                "my_application"
+            ],
+            "title": "Build"
+        },
+        "MyApplication": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "env": {
+                    "type": "string"
+                },
+                "os": {
+                    "type": "string"
+                },
+                "python": {
+                    "$ref": "#/definitions/Python"
+                }
+            },
+            "required": [
+                "env",
+                "os",
+                "python"
+            ],
+            "title": "MyApplication"
+        },
+        "Python": {
+            "anyOf": [
+                {
+                    "type": "number"
+                },
+                {
+                    "type": "string"
+                }
+            ],
+            "title": "Python"
+        }
+    }
+}
